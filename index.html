@@ -1,0 +1,2849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetSuite Integration API Documentation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            /* ── LIGHT THEME ── */
+            --bg: #f4f6fb;
+            --surface: #ffffff;
+            --surface2: #f0f3fa;
+            --border: #dde3f0;
+            --accent: #2563eb;
+            --accent-dim: rgba(37, 99, 235, 0.08);
+            --green: #059669;
+            --green-dim: rgba(5, 150, 105, 0.1);
+            --orange: #d97706;
+            --red: #dc2626;
+            --purple: #7c3aed;
+            --text-primary: #1e2a3a;
+            --text-secondary: #4b5a6e;
+            --text-muted: #8a96a8;
+            --string: #059669;
+            --number: #d97706;
+            --boolean: #7c3aed;
+            --property: #2563eb;
+            --keyword: #dc2626;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 2rem;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .version-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .base-url-section {
+            background: white;
+            margin: 2rem auto;
+            padding: 1.5rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+
+        .base-url-label {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .base-url-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            color: #1f2937;
+            font-size: 0.9rem;
+            word-break: break-all;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            background: white;
+            margin: 2rem auto;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+        }
+
+        .endpoint {
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .endpoint:last-child {
+            border-bottom: none;
+        }
+
+        .endpoint-header {
+            background: #f9fafb;
+            padding: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            border-bottom: 1px solid #e5e7eb;
+            transition: background 0.2s;
+        }
+
+        .endpoint-header:hover {
+            background: #f3f4f6;
+        }
+
+        .endpoint-header.active {
+            background: #dbeafe;
+        }
+
+        .method-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 60px;
+            padding: 0.4rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        .method-get {
+            background: #22c55e;
+            color: white;
+        }
+
+        .method-post {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .endpoint-url {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #1f2937;
+            word-break: break-all;
+        }
+
+        .endpoint-toggle {
+            color: #6b7280;
+            transition: transform 0.3s;
+        }
+
+        .endpoint-toggle.active {
+            transform: rotate(180deg);
+        }
+
+        .endpoint-body {
+            display: none;
+            padding: 2rem;
+            background: white;
+        }
+
+        .endpoint-body.active {
+            display: block;
+        }
+
+        /* ── Section shell ── */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            padding: 1rem 1.25rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface2);
+        }
+
+        /* ── Body section ── */
+        .body-section {}
+
+        .body-required-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background: rgba(220, 38, 38, 0.07);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            color: var(--red);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            padding: 0.2rem 0.6rem;
+            border-radius: 999px;
+            margin-left: 0.75rem;
+            vertical-align: middle;
+        }
+
+        .body-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .body-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .media-type-select {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            cursor: pointer;
+            outline: none;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%234b5a6e' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            padding-right: 1.75rem;
+            transition: border-color 0.15s;
+        }
+
+        .media-type-select:hover {
+            border-color: var(--accent);
+        }
+
+        /* ── Tab switcher ── */
+        .tab-row {
+            display: flex;
+            gap: 0;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface2);
+            padding: 0 1.25rem;
+        }
+
+        .tab-btn {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            padding: 0.65rem 1rem;
+            cursor: pointer;
+            transition: color 0.15s, border-color 0.15s;
+            margin-bottom: -1px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        .param-table th {
+            background: #f9fafb;
+            padding: 0.75rem;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #374151;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .param-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 0.875rem;
+        }
+
+        .param-name {
+            font-family: 'Courier New', monospace;
+            color: #dc2626;
+            font-weight: 500;
+        }
+
+        .param-type {
+            font-family: 'Courier New', monospace;
+            color: #7c3aed;
+            font-size: 0.8rem;
+        }
+
+        .no-params {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 6px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        .response-section {
+            margin-top: 2rem;
+        }
+
+        .response-code {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .response-code:last-child {
+            border-bottom: none;
+        }
+
+        .response-code.error .response-status {
+            background: rgba(220, 38, 38, 0.07);
+            color: var(--red);
+            border-color: rgba(220, 38, 38, 0.2);
+        }
+
+        .response-code.error {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-left-color: #f59e0b;
+        }
+
+        .response-code-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .response-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: var(--green-dim);
+            color: var(--green);
+            border: 1px solid rgba(5, 150, 105, 0.2);
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+        }
+
+        .response-desc {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--text-primary);
+        }
+
+        /* ── CODE BLOCK — light ── */
+        .code-block {
+            background: #f6f8ff;
+            border: 1px solid #dde3f0;
+            color: var(--text-primary);
+            padding: 0;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            line-height: 1.7;
+            position: relative;
+        }
+
+        .code-block pre {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.775rem;
+            line-height: 1.75;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            tab-size: 2;
+            color: var(--text-primary);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 0.3rem 0.65rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .copy-btn:hover {
+            background: var(--surface2);
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+
+        .copy-btn.copied {
+            color: var(--green);
+            border-color: var(--green);
+        }
+
+        /* ── syntax colours — light-friendly ── */
+        .p {
+            color: #1d4ed8;
+        }
+
+        /* property key  — blue        */
+        .s {
+            color: #059669;
+        }
+
+        /* string value  — green       */
+        .n {
+            color: #b45309;
+        }
+
+        /* number value  — amber       */
+        .b {
+            color: #7c3aed;
+        }
+
+        /* boolean       — purple      */
+        .k {
+            color: #dc2626;
+        }
+
+        /* keyword/null  — red         */
+        .c {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        /* comment        */
+
+        /* legacy spans used in GET response blocks */
+        .property {
+            color: #1d4ed8;
+        }
+
+        .string {
+            color: #059669;
+        }
+
+        .number {
+            color: #b45309;
+        }
+
+        .boolean {
+            color: #7c3aed;
+        }
+
+        /* ── Schema panel ── */
+        .schema-panel {
+            padding: 1.25rem 1.5rem;
+            display: none;
+        }
+
+        .schema-panel.visible {
+            display: block;
+        }
+
+        .schema-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .schema-table thead tr {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .schema-table th {
+            font-family: 'DM Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.7rem;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 0.5rem 0.75rem 0.75rem;
+            text-align: left;
+        }
+
+        .schema-table td {
+            padding: 0.6rem 0.75rem;
+            border-bottom: 1px solid rgba(180, 190, 210, 0.4);
+            vertical-align: top;
+        }
+
+        .schema-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .field-name {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--property);
+        }
+
+        .field-type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--purple);
+            background: rgba(124, 58, 237, 0.07);
+            border: 1px solid rgba(124, 58, 237, 0.15);
+            padding: 0.1rem 0.45rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .field-req {
+            font-size: 0.65rem;
+            font-weight: 600;
+            padding: 0.1rem 0.45rem;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .req-yes {
+            background: rgba(220, 38, 38, 0.07);
+            color: var(--red);
+            border: 1px solid rgba(220, 38, 38, 0.18);
+        }
+
+        .req-no {
+            background: rgba(138, 150, 168, 0.08);
+            color: var(--text-muted);
+            border: 1px solid rgba(138, 150, 168, 0.18);
+        }
+
+        .field-desc {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        .nested-label {
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            padding: 1rem 0.75rem 0.4rem;
+            display: block;
+            border-top: 1px solid var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .notes {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .notes h4 {
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .notes ul {
+            margin-left: 1.5rem;
+            color: #1e3a8a;
+        }
+
+        .notes li {
+            margin: 0.5rem 0;
+        }
+
+        .try-button {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        .try-button:hover {
+            background: #2563eb;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.75rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
+
+            .endpoint-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .endpoint-url {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+    <script>
+        function toggleEndpoint(id) {
+            const header = document.getElementById('header-' + id);
+            const body = document.getElementById('body-' + id);
+            const toggle = document.getElementById('toggle-' + id);
+            header.classList.toggle('active');
+            body.classList.toggle('active');
+            toggle.classList.toggle('active');
+        }
+        function switchTab(tab, btn) {
+            // Determine prefix from button's closest tab-row sibling structure
+            const tabRow = btn.closest('.tab-row');
+            const codeBlock = tabRow.nextElementSibling;
+            const schemaPanel = codeBlock.nextElementSibling;
+
+            codeBlock.style.display = tab.endsWith('example') ? 'block' : 'none';
+            schemaPanel.classList.toggle('visible', tab.endsWith('schema'));
+
+            tabRow.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        }
+        function copyCode(btn) {
+            const pre = btn.closest('.code-block').querySelector('pre');
+            navigator.clipboard.writeText(pre.innerText).then(() => {
+                btn.classList.add('copied');
+                btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 11 4 16"/></svg> Copied`;
+                setTimeout(() => {
+                    btn.classList.remove('copied');
+                    btn.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy`;
+                }, 2000);
+            });
+        }
+        window.onload = function () {
+            toggleEndpoint('auth');
+        }
+    </script>
+</head>
+
+<body>
+    <div class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1>NetSuite Integration API Documentation</h1>
+                <span class="version-badge">v1.0</span>
+            </div>
+            <p class="subtitle">OAuth 1.0 Authentication & Integration Endpoints</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- BASE URL SECTION -->
+        <div class="base-url-section">
+            <div class="base-url-label">Base URL</div>
+            <div class="base-url-box">
+                https://11375429.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=3229&deploy=1
+            </div>
+        </div>
+
+        <!-- OVERVIEW SECTION -->
+        <div
+            style="background: white; margin: 2rem auto; padding: 2rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);">
+            <h2 style="color: #1f2937; font-size: 1.75rem; margin-bottom: 1rem;">Overview</h2>
+            <p style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem;">
+                This documentation provides comprehensive details for integrating with NetSuite's endpoints. These APIs
+                enable you to:
+            </p>
+            <ul style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem; margin-left: 1.5rem;">
+            <li>Retrieve all Sales Orders or a single Sales Order based on its ID</li>
+            <li>Retrieve all Invoices or a single Invoice based on its ID</li>
+            <li>Retrieve all Credit Memos</li>
+            <li>Create Invoices individually or in bulk</li>
+            <li>Create Credit Memos and optionally apply them to existing invoices</li>
+            <li>Create Payments and optionally apply them to existing invoices</li>
+            <li>Create Customer Deposits</li>
+            <li>Retrieve Debtor balances and deposit balances</li>
+        </ul>
+            <p style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem;">All data is retrieved directly from your
+                NetSuite environment.</p>
+            <p style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem;">
+                All endpoints require OAuth 1.0 authentication and are designed to work seamlessly with API clients such
+                as Postman. The APIs return data in JSON format and support standard HTTP response codes.
+            </p>
+            <div
+                style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
+                <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Available Endpoints:</h4>
+                <ul style="margin-left: 1.5rem; color: #075985; line-height: 1.8;">
+                <li><strong>GET &nbsp;Base URL&amp;type=billingorder:</strong> Retrieve all Sales Orders</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=billingorder&amp;id={salesOrderId}:</strong> Retrieve a single Sales Order by ID</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=invoice:</strong> Retrieve all Invoices along with associated line items</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=invoice&amp;id={invoiceId}:</strong> Retrieve a single Invoice by ID</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=creditmemo:</strong> Retrieve all Credit Memos</li>
+                <li><strong>POST Base URL&amp;type=Invoice:</strong> Create Invoices (single or bulk)</li>
+                <li><strong>POST Base URL&amp;type=creditmemo:</strong> Create Credit Memos and optionally apply to invoices</li>
+                <li><strong>POST Base URL&amp;type=payment:</strong> Create Payments and optionally apply to invoices</li>
+                <li><strong>POST Base URL&amp;type=customerdeposit:</strong> Create Customer Deposits</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=debtor:</strong> Retrieve Debtor balances and deposit balances</li>
+            </ul>
+            </div>
+            <div
+                style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
+                <h4 style="color: #92400e; margin-bottom: 0.5rem; font-weight: 600;">Before You Begin:</h4>
+                <ul style="margin-left: 1.5rem; color: #78350f; line-height: 1.8;">
+                    <li>Ensure you have valid OAuth 1.0 credentials (Consumer Key, Consumer Secret, Token ID, Token
+                        Secret)</li>
+                    <li>Configure authentication in your API client (Postman recommended)</li>
+                    <li>Manually add required headers (Content-Type and Accept) to each request</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- AUTHENTICATION SECTION -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-auth" onclick="toggleEndpoint('auth')">
+                    <span class="method-badge method-post" style="background: #8b5cf6;">AUTH</span>
+                    <span class="endpoint-url">OAuth 1.0 Authentication Setup</span>
+                    <span class="endpoint-toggle" id="toggle-auth">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-auth">
+                    <div class="section">
+                        <div class="section-title">OAuth 1.0 Configuration for Postman</div>
+                        <p style="margin-bottom: 1rem; color: #6b7280;">All NetSuite integration endpoints require OAuth
+                            1.0 authentication. Configure the following parameters in Postman before making any API
+                            requests:</p>
+                        <div
+                            style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
+                            <p style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">⚠️ Important:</p>
+                            <p style="color: #78350f; font-size: 0.9rem;">Keep these credentials secure. Never commit
+                                them to version control or share them publicly.</p>
+                        </div>
+                        <table class="param-table" style="margin-top: 1.5rem;">
+                            <thead>
+                                <tr>
+                                    <th>Parameter</th>
+                                    <th>Value</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Auth Type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">OAuth 1.0</code>
+                                    </td>
+                                    <td>Authentication method</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Account</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">11375429</code>
+                                    </td>
+                                    <td>NetSuite account ID (Production)</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Consumer Key</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">String</code>
+                                    </td>
+                                    <td>OAuth consumer key from NetSuite</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Consumer Secret</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">String</code>
+                                    </td>
+                                    <td>OAuth consumer secret</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Access Token (Token ID)</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">String</code>
+                                    </td>
+                                    <td>OAuth access token</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Token Secret</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">String</code>
+                                    </td>
+                                    <td>OAuth token secret</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Signature Method</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">HMAC-SHA256</code>
+                                    </td>
+                                    <td>Signature hashing algorithm</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="margin-top: 2rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem; color: #1f2937;">Complete OAuth 1.0
+                                Credentials:</h4>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"account"</span>: <span class="string">"11375429"</span>,
+  <span class="property">"consumerKey"</span>: <span class="string">"String"</span>,
+  <span class="property">"consumerSecret"</span>: <span class="string">"String"</span>,
+  <span class="property">"tokenId"</span>: <span class="string">"String"</span>,
+  <span class="property">"tokenSecret"</span>: <span class="string">"String"</span>,
+  <span class="property">"signatureMethod"</span>: <span class="string">"HMAC-SHA256"</span>
+}</pre>
+                            </div>
+                        </div>
+                        <div style="margin-top: 2rem;">
+                            <h4 style="font-weight: 600; margin-bottom: 1rem; color: #1f2937;">Postman Configuration
+                                Steps:</h4>
+                            <ol style="margin-left: 1.5rem; color: #374151; line-height: 1.8;">
+                                <li>Open your request in Postman</li>
+                                <li>Go to the <strong>Authorization</strong> tab</li>
+                                <li>Select <strong>OAuth 1.0</strong> from the Type dropdown</li>
+                                <li>Fill in the credentials as shown above</li>
+                                <li>Set <strong>Add auth data to:</strong> "Request Headers"</li>
+                                <li>Enable these checkboxes:
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li>✅ Add empty parameters to signature</li>
+                                        <li>✅ Encode the parameters in the Authorization header</li>
+                                    </ul>
+                                </li>
+                                <li><strong>IMPORTANT:</strong> Go to the <strong>Headers</strong> tab and manually add:
+                                    <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                        <li><code>Content-Type: application/json</code></li>
+                                        <li><code>Accept: application/json</code></li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                        <div class="notes" style="margin-top: 2rem;">
+                            <h4>Important Notes</h4>
+                            <ul>
+                                <li>This is a <strong>Production</strong> environment configuration</li>
+                                <li>OAuth 1.0 signatures are automatically generated by Postman</li>
+                                <li>The signature method must be set to <strong>HMAC-SHA256</strong></li>
+                                <li>The Authorization header is automatically added when OAuth 1.0 is configured</li>
+                                <li><strong>Headers must be manually added</strong> to each request (Content-Type and
+                                    Accept)</li>
+                                <li>All requests require proper OAuth 1.0 authentication to access NetSuite data</li>
+                            </ul>
+                        </div>
+                        <div
+                            style="background: #fee2e2; border-left: 4px solid #dc2626; padding: 1rem; margin: 1.5rem 0; border-radius: 4px;">
+                            <h4 style="color: #991b1b; margin-bottom: 0.5rem; font-weight: 600;">Common Error: 400 Bad
+                                Request</h4>
+                            <div class="code-block" style="margin: 1rem 0;">
+                                <pre>error code: UNEXPECTED_ERROR
+error message: An unexpected SuiteScript error has occurred</pre>
+                            </div>
+                            <p style="color: #7f1d1d; margin-bottom: 0.5rem; font-weight: 500;">This error typically
+                                occurs when:</p>
+                            <ul style="margin-left: 1.5rem; color: #7f1d1d;">
+                                <li>OAuth 1.0 credentials are missing or incorrect</li>
+                                <li>The <strong>Content-Type</strong> and <strong>Accept</strong> headers are not added
+                                    manually</li>
+                                <li>The NetSuite account doesn't have access to the script</li>
+                                <li>The script deployment is not active or accessible</li>
+                            </ul>
+                            <p style="color: #7f1d1d; margin-top: 0.75rem; font-weight: 500;">Solution:</p>
+                            <ul style="margin-left: 1.5rem; color: #7f1d1d;">
+                                <li>Double-check all OAuth 1.0 credentials are entered correctly</li>
+                                <li><strong>Manually add headers</strong> in the Headers tab: Content-Type and Accept as
+                                    application/json</li>
+                                <li>Check that both OAuth checkboxes are enabled in Postman</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 1: GET Sales Order Data -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-1" onclick="toggleEndpoint(1)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=billingorder</span>
+                    <span class="endpoint-toggle" id="toggle-1">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-1">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7; margin-bottom: 0.5rem;">This endpoint retrieves
+                            Sales Order records with basic Information and payment link.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">billingorder</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers <span style="color: #dc2626; font-size: 0.9rem;">(Must be
+                                manually added in Postman)</span></div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code>
+                                    </td>
+                                    <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div
+                            style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                            <p style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">⚠️ Important:</p>
+                            <p style="color: #78350f; font-size: 0.9rem;">You <strong>must manually add</strong> the
+                                Content-Type and Accept headers in the Headers tab.</p>
+                        </div>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Sales Orders retrieved
+                                successfully</p>
+                            <label
+                                style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">
+                                Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Sales Orders retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"tranId"</span>: <span class="string">"String"</span>,
+      <span class="property">"tranDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"customer"</span>: <span class="string">"String"</span>,
+      <span class="property">"customerId"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"total"</span>: <span class="number">number</span>,
+      <span class="property">"taxTotal"</span>: <span class="number">number</span>,
+      <span class="property">"terms"</span>: <span class="string">"String"</span>,
+      <span class="property">"dueDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"familyCode"</span>: <span class="string">"String"</span>,
+      <span class="property">"paymentLink"</span>: <span class="string">"String"</span>,
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No records found
+                                matching the criteria.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>All dates are returned in DD/MM/YYYY format</li>
+                            <li>Timestamps are in ISO 8601 format</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 2: GET Sales Order by id -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-2" onclick="toggleEndpoint(2)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=billingorder&id={salesOrderId}</span>
+                    <span class="endpoint-toggle" id="toggle-2">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-2">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves all Basic details of the
+                            sales order associated with the provided ID.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">billingorder</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">id</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">{salesOrderId}</code>
+                                    </td>
+                                    <td>Sale Order internal id in Netsuite</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code>
+                                    </td>
+                                    <td>OAuth 1.0 authentication header (auto-generated)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 0.75rem; color: #6b7280; font-size: 0.875rem;"><em>Note: The Authorization
+                                header is automatically generated when using OAuth 1.0 authentication in Postman.</em>
+                        </p>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Sales Order retrieved
+                                successfully</p>
+                            <label
+                                style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">
+                                Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Sales Order retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"tranId"</span>: <span class="string">"String"</span>,
+      <span class="property">"tranDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"customer"</span>: <span class="string">"String"</span>,
+      <span class="property">"customerId"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"total"</span>: <span class="number">number</span>,
+      <span class="property">"taxTotal"</span>: <span class="number">number</span>,
+      <span class="property">"terms"</span>: <span class="string">"String"</span>,
+      <span class="property">"dueDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"familyCode"</span>: <span class="string">"String"</span>,
+      <span class="property">"paymentLink"</span>: <span class="string">"String"</span>,
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No records found
+                                matching the criteria.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>Timestamps are in ISO 8601 format</li>
+                            <li>Line items include quantity, rate, and calculated amounts</li>
+                            <li>Classification dimensions (class, department, location) are included for each line</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 3: GET Invoice Data -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-3" onclick="toggleEndpoint(3)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=invoice</span>
+                    <span class="endpoint-toggle" id="toggle-3">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-3">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves Invoice records along with
+                            their associated items. Each Invoice includes complete header information and an array of
+                            related item records.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">invoice</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers <span style="color: #dc2626; font-size: 0.9rem;">(Must be
+                                manually added in Postman)</span></div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code>
+                                    </td>
+                                    <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div
+                            style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                            <p style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">⚠️ Important:</p>
+                            <p style="color: #78350f; font-size: 0.9rem;">You <strong>must manually add</strong> the
+                                Content-Type and Accept headers in the Headers tab.</p>
+                        </div>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Invoices retrieved
+                                successfully</p>
+                            <label
+                                style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">
+                                Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Invoices retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceNumber"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"dueDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"customer"</span>: <span class="string">"String"</span>,
+      <span class="property">"customerId"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"familyCode"</span>: <span class="string">"String"</span>,
+      <span class="property">"rate"</span>: <span class="string">"String"</span>,
+      <span class="property">"items"</span>: [
+        {
+          <span class="property">"item"</span>: <span class="string">"String"</span>,
+          <span class="property">"itemId"</span>: <span class="string">"String"</span>,
+          <span class="property">"account"</span>: <span class="string">"String"</span>,
+          <span class="property">"accountId"</span>: <span class="string">"String"</span>,
+          <span class="property">"quantity"</span>: <span class="number">number</span>,
+          <span class="property">"rate"</span>: <span class="number">number</span>,
+          <span class="property">"location"</span>: <span class="string">"String"</span>,
+          <span class="property">"department"</span>: <span class="string">"String"</span>,
+          <span class="property">"class"</span>: <span class="string">"String"</span>,
+          <span class="property">"studentExternalId"</span>: <span class="string">"String"</span>,
+        }
+      ]
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No records found
+                                matching the criteria.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>All dates are returned in DD/MM/YYYY format</li>
+                            <li>Timestamps are in ISO 8601 format</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 4: GET Invoice by id -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-4" onclick="toggleEndpoint(4)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=invoice&id={invoiceId}</span>
+                    <span class="endpoint-toggle" id="toggle-4">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-4">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves Invoice record along with
+                            their associated items. Invoice includes complete header information and an array of related
+                            item records associated with the provided ID.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">invoice</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">id</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">{invoiceId}</code>
+                                    </td>
+                                    <td>Invoice internal id in Netsuite</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code>
+                                    </td>
+                                    <td>OAuth 1.0 authentication header (auto-generated)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="margin-top: 0.75rem; color: #6b7280; font-size: 0.875rem;"><em>Note: The Authorization
+                                header is automatically generated when using OAuth 1.0 authentication in Postman.</em>
+                        </p>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Invoice retrieved
+                                successfully</p>
+                            <label
+                                style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">
+                                Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Invoice retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceNumber"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"dueDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"customer"</span>: <span class="string">"String"</span>,
+      <span class="property">"customerId"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"familyCode"</span>: <span class="string">"String"</span>,
+      <span class="property">"rate"</span>: <span class="string">"String"</span>,
+      <span class="property">"items"</span>: [
+        {
+          <span class="property">"item"</span>: <span class="string">"String"</span>,
+          <span class="property">"itemId"</span>: <span class="string">"String"</span>,
+          <span class="property">"account"</span>: <span class="string">"String"</span>,
+          <span class="property">"accountId"</span>: <span class="string">"String"</span>,
+          <span class="property">"quantity"</span>: <span class="number">number</span>,
+          <span class="property">"rate"</span>: <span class="number">number</span>,
+          <span class="property">"location"</span>: <span class="string">"String"</span>,
+          <span class="property">"department"</span>: <span class="string">"String"</span>,
+          <span class="property">"class"</span>: <span class="string">"String"</span>,
+          <span class="property">"studentExternalId"</span>: <span class="string">"String"</span>,
+        }
+      ]
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No records found
+                                matching the criteria.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>Timestamps are in ISO 8601 format</li>
+                            <li>Line items include quantity, rate, and calculated amounts</li>
+                            <li>Classification dimensions (class, department, location) are included for each line</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 5: POST Invoices Data -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-5" onclick="toggleEndpoint(5)">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-url">{Base URL}&type=Invoice</span>
+                    <span class="endpoint-toggle" id="toggle-5">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-5">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint Creates Invoice records with basic
+                            Information.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">Invoice</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- BODY SECTION -->
+                    <div class="section body-section">
+                        <div class="section-title">
+                            Request Body
+                            <span class="body-required-badge">&#9679; required</span>
+                        </div>
+                        <div class="body-header">
+                            <div class="body-header-left">
+                                <span>Media type:</span>
+                                <select class="media-type-select">
+                                    <option value="application/json">application/json</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="tab-row">
+                            <button class="tab-btn active" onclick="switchTab('example', this)">Example Value</button>
+                            <button class="tab-btn" onclick="switchTab('schema', this)">Schema</button>
+                        </div>
+                        <div id="tab-example" class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
+                                Copy
+                            </button>
+                            <pre>{
+  <span class="p">"type"</span>: <span class="s">"invoice"</span>,
+  <span class="p">"data"</span>: [
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"dueDate"</span>:    <span class="s">"2026-03-25"</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Term 2 Fees"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>,
+      <span class="p">"items"</span>: [
+        {
+          <span class="p">"item"</span>:     <span class="s">"Test Item 001"</span>,
+          <span class="p">"quantity"</span>: <span class="n">1</span>,
+          <span class="p">"rate"</span>:     <span class="n">5000</span>,
+          <span class="p">"taxCode"</span>:  <span class="s">"GST:TS-AU"</span>,
+          <span class="p">"student"</span>:  <span class="s">"Test student1"</span>
+        }
+      ]
+    },
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"dueDate"</span>:    <span class="s">"2026-03-25"</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Term 3 Fees"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>,
+      <span class="p">"items"</span>: [
+        {
+          <span class="p">"item"</span>:     <span class="s">"Test Item 001"</span>,
+          <span class="p">"quantity"</span>: <span class="n">1</span>,
+          <span class="p">"rate"</span>:     <span class="n">300</span>,
+          <span class="p">"taxCode"</span>:  <span class="s">"GST:TS-AU"</span>,
+          <span class="p">"student"</span>:  <span class="s">"Test student1"</span>
+        }
+      ]
+    }
+  ]
+}</pre>
+                        </div>
+                        <div id="tab-schema" class="schema-panel">
+                            <table class="schema-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="field-name">type</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Transaction type. One of: <code>invoice</code>,
+                                            <code>creditmemo</code>, <code>payment</code>, <code>customerdeposit</code>,
+                                            <code>salesorder</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">data</span></td>
+                                        <td><span class="field-type">array</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Array of invoice objects to create. Supports single or
+                                            bulk.</td>
+                                    </tr>
+                                    <span class="nested-label">data[ ] — Invoice object</span>
+                                    <tr>
+                                        <td><span class="field-name">debtor</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Customer name as it appears in NetSuite (altname /
+                                            entityid / companyname).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">tranDate</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Transaction date. Format: <code>YYYY-MM-DD</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">dueDate</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Due date. Format: <code>YYYY-MM-DD</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">memo</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Invoice memo / description e.g.
+                                            <code>"Term 2 Fees"</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">familyCode</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Custom body field <code>custbody_family_code</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">items</span></td>
+                                        <td><span class="field-type">array</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">At least one line item is required.</td>
+                                    </tr>
+                                    <span class="nested-label">items[ ] — Line item object</span>
+                                    <tr>
+                                        <td><span class="field-name">item</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Item name as it appears in NetSuite (itemid /
+                                            displayname).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">quantity</span></td>
+                                        <td><span class="field-type">number</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Line quantity. Defaults to 1 if omitted.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">rate</span></td>
+                                        <td><span class="field-type">number</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Unit rate / price.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">taxCode</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Tax code text e.g. <code>"GST:TS-AU"</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">student</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Student contact name mapped to <code>custcol1</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">memo</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Line-level memo / description.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- RESPONSE SECTION -->
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">All invoices created
+                                successfully</p>
+                            <label style="display:block;margin:1rem 0 0.5rem;font-weight:500;color:#374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div
+                                style="margin-top:1rem;margin-bottom:0.5rem;font-weight:500;color:#6b7280;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;">
+                                Example Value | Schema</div>
+                            <div class="code-block" style="border-radius:8px;margin-top:0.25rem;">
+                                <button class="copy-btn" onclick="copyCode(this)">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                    Copy
+                                </button>
+                                <pre>{
+  <span class="p">"success"</span>:      <span class="b">true</span>,
+  <span class="p">"message"</span>:      <span class="s">"All invoices created successfully"</span>,
+  <span class="p">"totalSent"</span>:    <span class="n">2</span>,
+  <span class="p">"totalSuccess"</span>: <span class="n">2</span>,
+  <span class="p">"totalFailed"</span>:  <span class="n">0</span>,
+  <span class="p">"results"</span>: [
+    {
+      <span class="p">"index"</span>:     <span class="n">1</span>,
+      <span class="p">"success"</span>:   <span class="b">true</span>,
+      <span class="p">"invoiceId"</span>: <span class="n">5416</span>,
+      <span class="p">"debtor"</span>:    <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:      <span class="s">"Term 2 Fees"</span>
+    },
+    {
+      <span class="p">"index"</span>:     <span class="n">2</span>,
+      <span class="p">"success"</span>:   <span class="b">true</span>,
+      <span class="p">"invoiceId"</span>: <span class="n">5417</span>,
+      <span class="p">"debtor"</span>:    <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:      <span class="s">"Term 3 Fees"</span>
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">No records found matching the
+                                criteria.</p>
+                        </div>
+                    </div>
+
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>All dates are returned in DD/MM/YYYY format</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 6: GET Credit Memo Data -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-6" onclick="toggleEndpoint(6)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=creditmemo</span>
+                    <span class="endpoint-toggle" id="toggle-6">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-6">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves Credit memo records along
+                            with their associated items. Each Credit memo includes complete header information and an
+                            array of related item records.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">creditmemo</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers <span style="color: #dc2626; font-size: 0.9rem;">(Must be
+                                manually added in Postman)</span></div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code>
+                                    </td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code>
+                                    </td>
+                                    <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div
+                            style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                            <p style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">⚠️ Important:</p>
+                            <p style="color: #78350f; font-size: 0.9rem;">You <strong>must manually add</strong> the
+                                Content-Type and Accept headers in the Headers tab.</p>
+                        </div>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Credit Memos retrieved
+                                successfully</p>
+                            <label
+                                style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">
+                                Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Credit Memos retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"creditMemoNumber"</span>: <span class="string">"String"</span>,
+      <span class="property">"creditMemoDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"dueDate"</span>: <span class="string">"String"</span>,
+      <span class="property">"customer"</span>: <span class="string">"String"</span>,
+      <span class="property">"customerId"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"familyCode"</span>: <span class="string">"String"</span>,
+      <span class="property">"rate"</span>: <span class="string">"String"</span>,
+      <span class="property">"items"</span>: [
+        {
+          <span class="property">"item"</span>: <span class="string">"String"</span>,
+          <span class="property">"itemId"</span>: <span class="string">"String"</span>,
+          <span class="property">"account"</span>: <span class="string">"String"</span>,
+          <span class="property">"accountId"</span>: <span class="string">"String"</span>,
+          <span class="property">"quantity"</span>: <span class="number">number</span>,
+          <span class="property">"rate"</span>: <span class="number">number</span>,
+          <span class="property">"location"</span>: <span class="string">"String"</span>,
+          <span class="property">"department"</span>: <span class="string">"String"</span>,
+          <span class="property">"class"</span>: <span class="string">"String"</span>,
+          <span class="property">"studentExternalId"</span>: <span class="string">"String"</span>,
+        }
+      ]
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No records found
+                                matching the criteria.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>All dates are returned in DD/MM/YYYY format</li>
+                            <li>Timestamps are in ISO 8601 format</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- ENDPOINT 7: POST Credit Memo Data -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-7" onclick="toggleEndpoint(7)">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-url">{Base URL}&type=creditmemo</span>
+                    <span class="endpoint-toggle" id="toggle-7">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-7">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint Creates Credit Memo records and
+                            optionally applies them to existing invoices.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">creditmemo</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- BODY SECTION -->
+                    <div class="section body-section">
+                        <div class="section-title">
+                            Request Body
+                            <span class="body-required-badge">&#9679; required</span>
+                        </div>
+                        <div class="body-header">
+                            <div class="body-header-left">
+                                <span>Media type:</span>
+                                <select class="media-type-select">
+                                    <option value="application/json">application/json</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="tab-row">
+                            <button class="tab-btn active" onclick="switchTab('cm-example', this)">Example
+                                Value</button>
+                            <button class="tab-btn" onclick="switchTab('cm-schema', this)">Schema</button>
+                        </div>
+                        <div id="tab-cm-example" class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
+                                Copy
+                            </button>
+                            <pre>{
+  <span class="p">"type"</span>: <span class="s">"creditmemo"</span>,
+  <span class="p">"data"</span>: [
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Fee adjustment Term 2"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>,
+      <span class="p">"items"</span>: [
+        {
+          <span class="p">"item"</span>:     <span class="s">"Test Item 001"</span>,
+          <span class="p">"quantity"</span>: <span class="n">1</span>,
+          <span class="p">"rate"</span>:     <span class="n">500</span>,
+          <span class="p">"taxCode"</span>:  <span class="s">"GST:TS-AU"</span>,
+          <span class="p">"student"</span>:  <span class="s">"Test student1"</span>
+        }
+      ],
+      <span class="p">"applyList"</span>: [
+        { <span class="p">"docNumber"</span>: <span class="s">"INV5439"</span>, <span class="p">"amount"</span>: <span class="n">500</span> }
+      ]
+    },
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Fee adjustment Term 3"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>,
+      <span class="p">"items"</span>: [
+        {
+          <span class="p">"item"</span>:     <span class="s">"Test Item 001"</span>,
+          <span class="p">"quantity"</span>: <span class="n">1</span>,
+          <span class="p">"rate"</span>:     <span class="n">300</span>,
+          <span class="p">"taxCode"</span>:  <span class="s">"GST:TS-AU"</span>,
+          <span class="p">"student"</span>:  <span class="s">"Test student1"</span>
+        }
+      ],
+      <span class="p">"applyList"</span>: [
+        { <span class="p">"docNumber"</span>: <span class="s">"INV5440"</span>, <span class="p">"amount"</span>: <span class="n">300</span> }
+      ]
+    }
+  ]
+}</pre>
+                        </div>
+                        <div id="tab-cm-schema" class="schema-panel">
+                            <table class="schema-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="field-name">type</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Must be <code>creditmemo</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">data</span></td>
+                                        <td><span class="field-type">array</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Array of credit memo objects to create. Supports single
+                                            or bulk.</td>
+                                    </tr>
+                                    <span class="nested-label">data[ ] — Credit Memo object</span>
+                                    <tr>
+                                        <td><span class="field-name">debtor</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Customer name as it appears in NetSuite (altname /
+                                            entityid / companyname).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">tranDate</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Transaction date. Format: <code>YYYY-MM-DD</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">memo</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Credit memo description e.g.
+                                            <code>"Fee adjustment Term 2"</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">familyCode</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Custom body field <code>custbody_family_code</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">items</span></td>
+                                        <td><span class="field-type">array</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">At least one line item is required.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">applyList</span></td>
+                                        <td><span class="field-type">array</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">List of invoices to apply this credit memo to.</td>
+                                    </tr>
+                                    <span class="nested-label">items[ ] — Line item object</span>
+                                    <tr>
+                                        <td><span class="field-name">item</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Item name as it appears in NetSuite (itemid /
+                                            displayname).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">quantity</span></td>
+                                        <td><span class="field-type">number</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Line quantity. Defaults to 1 if omitted.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">rate</span></td>
+                                        <td><span class="field-type">number</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Unit rate / price.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">taxCode</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Tax code text e.g. <code>"GST:TS-AU"</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">student</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Student contact name mapped to <code>custcol1</code>.
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">memo</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Line-level memo / description.</td>
+                                    </tr>
+                                    <span class="nested-label">applyList[ ] — Apply object</span>
+                                    <tr>
+                                        <td><span class="field-name">docNumber</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Invoice document number to apply against e.g.
+                                            <code>"INV5439"</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">amount</span></td>
+                                        <td><span class="field-type">number</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Amount to apply to the specified invoice.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- RESPONSE SECTION -->
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">All credit memos created
+                                successfully</p>
+                            <label style="display:block;margin:1rem 0 0.5rem;font-weight:500;color:#374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div
+                                style="margin-top:1rem;margin-bottom:0.5rem;font-weight:500;color:#6b7280;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;">
+                                Example Value | Schema</div>
+                            <div class="code-block" style="border-radius:8px;margin-top:0.25rem;">
+                                <button class="copy-btn" onclick="copyCode(this)">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                    Copy
+                                </button>
+                                <pre>{
+  <span class="p">"success"</span>:      <span class="b">true</span>,
+  <span class="p">"message"</span>:      <span class="s">"All credit memos created successfully"</span>,
+  <span class="p">"totalSent"</span>:    <span class="n">2</span>,
+  <span class="p">"totalSuccess"</span>: <span class="n">2</span>,
+  <span class="p">"totalFailed"</span>:  <span class="n">0</span>,
+  <span class="p">"results"</span>: [
+    {
+      <span class="p">"index"</span>:        <span class="n">1</span>,
+      <span class="p">"success"</span>:      <span class="b">true</span>,
+      <span class="p">"creditMemoId"</span>: <span class="n">91479</span>,
+      <span class="p">"debtor"</span>:       <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:         <span class="s">"Fee adjustment Term 2"</span>
+    },
+    {
+      <span class="p">"index"</span>:        <span class="n">2</span>,
+      <span class="p">"success"</span>:      <span class="b">true</span>,
+      <span class="p">"creditMemoId"</span>: <span class="n">91480</span>,
+      <span class="p">"debtor"</span>:       <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:         <span class="s">"Fee adjustment Term 3"</span>
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">No records found matching the
+                                criteria.</p>
+                        </div>
+                    </div>
+
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>All dates are returned in DD/MM/YYYY format</li>
+                            <li><code>applyList</code> matches invoices by document number (e.g. INV5439), not internal
+                                ID</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- ENDPOINT 8: POST Payments Data -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-8" onclick="toggleEndpoint(8)">
+                    <span class="method-badge method-post">POST</span>
+                    <span class="endpoint-url">{Base URL}&type=payment</span>
+                    <span class="endpoint-toggle" id="toggle-8">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-8">
+                    <div
+                        style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint Creates Payment records and
+                            optionally applies them to existing invoices.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code>
+                                    </td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code>
+                                    </td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code
+                                            style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">payment</code>
+                                    </td>
+                                    <td>Type of data</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- BODY SECTION -->
+                    <div class="section body-section">
+                        <div class="section-title">
+                            Request Body
+                            <span class="body-required-badge">&#9679; required</span>
+                        </div>
+                        <div class="body-header">
+                            <div class="body-header-left">
+                                <span>Media type:</span>
+                                <select class="media-type-select">
+                                    <option value="application/json">application/json</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="tab-row">
+                            <button class="tab-btn active" onclick="switchTab('pm-example', this)">Example
+                                Value</button>
+                            <button class="tab-btn" onclick="switchTab('pm-schema', this)">Schema</button>
+                        </div>
+                        <div id="tab-pm-example" class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
+                                Copy
+                            </button>
+                            <pre>{
+  <span class="p">"type"</span>: <span class="s">"payment"</span>,
+  <span class="p">"data"</span>: [
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"amount"</span>:     <span class="n">5000</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Term 2 Payment"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>,
+      <span class="p">"applyList"</span>: [
+        { <span class="p">"docNumber"</span>: <span class="s">"INVTEST"</span>, <span class="p">"amount"</span>: <span class="n">5000</span> }
+      ]
+    },
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"amount"</span>:     <span class="n">300</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Term 3 Payment"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>,
+      <span class="p">"applyList"</span>: [
+        { <span class="p">"docNumber"</span>: <span class="s">"INV5417"</span>, <span class="p">"amount"</span>: <span class="n">300</span> }
+      ]
+    }
+  ]
+}</pre>
+                        </div>
+                        <div id="tab-pm-schema" class="schema-panel">
+                            <table class="schema-table">
+                                <thead>
+                                    <tr>
+                                        <th>Field</th>
+                                        <th>Type</th>
+                                        <th>Required</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="field-name">type</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Must be <code>payment</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">data</span></td>
+                                        <td><span class="field-type">array</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Array of payment objects to create. Supports single or
+                                            bulk.</td>
+                                    </tr>
+                                    <span class="nested-label">data[ ] — Payment object</span>
+                                    <tr>
+                                        <td><span class="field-name">debtor</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Customer name as it appears in NetSuite (altname /
+                                            entityid / companyname).</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">tranDate</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Transaction date. Format: <code>YYYY-MM-DD</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">amount</span></td>
+                                        <td><span class="field-type">number</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Total payment amount.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">memo</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Payment description e.g. <code>"Term 2 Payment"</code>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">familyCode</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">Custom body field <code>custbody_family_code</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">applyList</span></td>
+                                        <td><span class="field-type">array</span></td>
+                                        <td><span class="field-req req-no">optional</span></td>
+                                        <td class="field-desc">List of invoices to apply this payment to.</td>
+                                    </tr>
+                                    <span class="nested-label">applyList[ ] — Apply object</span>
+                                    <tr>
+                                        <td><span class="field-name">docNumber</span></td>
+                                        <td><span class="field-type">string</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Invoice document number to apply against e.g.
+                                            <code>"INVTEST"</code></td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="field-name">amount</span></td>
+                                        <td><span class="field-type">number</span></td>
+                                        <td><span class="field-req req-yes">required</span></td>
+                                        <td class="field-desc">Amount to apply to the specified invoice.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- RESPONSE SECTION -->
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span
+                                    class="response-desc">OK</span></div>
+                            <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">All payments created
+                                successfully</p>
+                            <label style="display:block;margin:1rem 0 0.5rem;font-weight:500;color:#374151;">Media
+                                type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div
+                                style="margin-top:1rem;margin-bottom:0.5rem;font-weight:500;color:#6b7280;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;">
+                                Example Value | Schema</div>
+                            <div class="code-block" style="border-radius:8px;margin-top:0.25rem;">
+                                <button class="copy-btn" onclick="copyCode(this)">
+                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                        stroke-width="2">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" />
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                    </svg>
+                                    Copy
+                                </button>
+                                <pre>{
+  <span class="p">"success"</span>:      <span class="b">true</span>,
+  <span class="p">"message"</span>:      <span class="s">"All payments created successfully"</span>,
+  <span class="p">"totalSent"</span>:    <span class="n">2</span>,
+  <span class="p">"totalSuccess"</span>: <span class="n">2</span>,
+  <span class="p">"totalFailed"</span>:  <span class="n">0</span>,
+  <span class="p">"results"</span>: [
+    {
+      <span class="p">"index"</span>:     <span class="n">1</span>,
+      <span class="p">"success"</span>:   <span class="b">true</span>,
+      <span class="p">"paymentId"</span>: <span class="n">91481</span>,
+      <span class="p">"debtor"</span>:    <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:      <span class="s">"Term 2 Payment"</span>
+    },
+    {
+      <span class="p">"index"</span>:     <span class="n">2</span>,
+      <span class="p">"success"</span>:   <span class="b">true</span>,
+      <span class="p">"paymentId"</span>: <span class="n">91482</span>,
+      <span class="p">"debtor"</span>:    <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:      <span class="s">"Term 3 Payment"</span>
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span
+                                    class="response-desc">No Content</span></div>
+                            <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">No records found matching the
+                                criteria.</p>
+                        </div>
+                    </div>
+
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>All dates are returned in DD/MM/YYYY format</li>
+                            <li><code>applyList</code> matches invoices by document number (e.g. INVTEST), not internal
+                                ID</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- ENDPOINT 9: POST Customer Deposit Data -->
+<div class="endpoint">
+    <div class="endpoint-header" id="header-9" onclick="toggleEndpoint(9)">
+        <span class="method-badge method-post">POST</span>
+        <span class="endpoint-url">{Base URL}&type=customerdeposit</span>
+        <span class="endpoint-toggle" id="toggle-9">▼</span>
+    </div>
+    <div class="endpoint-body" id="body-9">
+        <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+            <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+            <p style="color: #075985; line-height: 1.7;">This endpoint Creates Customer Deposit records in NetSuite.</p>
+        </div>
+        <div class="section">
+            <div class="section-title">Query Parameters</div>
+            <table class="param-table">
+                <thead><tr><th style="width: 20%;">Key</th><th style="width: 30%;">Value</th><th style="width: 50%;">Description</th></tr></thead>
+                <tbody>
+                    <tr><td><span class="param-name">Script</span></td><td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code></td><td>Script internal ID</td></tr>
+                    <tr><td><span class="param-name">deploy</span></td><td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code></td><td>Script deployment ID</td></tr>
+                    <tr><td><span class="param-name">type</span></td><td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">customerdeposit</code></td><td>Type of data</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- BODY SECTION -->
+        <div class="section body-section">
+            <div class="section-title">
+                Request Body
+                <span class="body-required-badge">&#9679; required</span>
+            </div>
+            <div class="body-header">
+                <div class="body-header-left">
+                    <span>Media type:</span>
+                    <select class="media-type-select"><option value="application/json">application/json</option></select>
+                </div>
+            </div>
+            <div class="tab-row">
+                <button class="tab-btn active" onclick="switchTab('cd-example', this)">Example Value</button>
+                <button class="tab-btn" onclick="switchTab('cd-schema', this)">Schema</button>
+            </div>
+            <div id="tab-cd-example" class="code-block">
+                <button class="copy-btn" onclick="copyCode(this)">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    Copy
+                </button>
+                <pre>{
+  <span class="p">"type"</span>: <span class="s">"customerdeposit"</span>,
+  <span class="p">"data"</span>: [
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"amount"</span>:     <span class="n">2000</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Term 2 Deposit"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>
+    },
+    {
+      <span class="p">"debtor"</span>:     <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"tranDate"</span>:   <span class="s">"2026-02-25"</span>,
+      <span class="p">"amount"</span>:     <span class="n">1500</span>,
+      <span class="p">"memo"</span>:       <span class="s">"Term 3 Deposit"</span>,
+      <span class="p">"familyCode"</span>: <span class="s">"FAM001"</span>
+    }
+  ]
+}</pre>
+            </div>
+            <div id="tab-cd-schema" class="schema-panel">
+                <table class="schema-table">
+                    <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+                    <tbody>
+                        <tr><td><span class="field-name">type</span></td><td><span class="field-type">string</span></td><td><span class="field-req req-yes">required</span></td><td class="field-desc">Must be <code>customerdeposit</code></td></tr>
+                        <tr><td><span class="field-name">data</span></td><td><span class="field-type">array</span></td><td><span class="field-req req-yes">required</span></td><td class="field-desc">Array of customer deposit objects to create. Supports single or bulk.</td></tr>
+                        <span class="nested-label">data[ ] — Customer Deposit object</span>
+                        <tr><td><span class="field-name">debtor</span></td><td><span class="field-type">string</span></td><td><span class="field-req req-yes">required</span></td><td class="field-desc">Customer name as it appears in NetSuite (altname / entityid / companyname).</td></tr>
+                        <tr><td><span class="field-name">tranDate</span></td><td><span class="field-type">string</span></td><td><span class="field-req req-no">optional</span></td><td class="field-desc">Transaction date. Format: <code>YYYY-MM-DD</code></td></tr>
+                        <tr><td><span class="field-name">amount</span></td><td><span class="field-type">number</span></td><td><span class="field-req req-yes">required</span></td><td class="field-desc">Total deposit amount.</td></tr>
+                        <tr><td><span class="field-name">memo</span></td><td><span class="field-type">string</span></td><td><span class="field-req req-no">optional</span></td><td class="field-desc">Deposit description e.g. <code>"Term 2 Deposit"</code></td></tr>
+                        <tr><td><span class="field-name">familyCode</span></td><td><span class="field-type">string</span></td><td><span class="field-req req-no">optional</span></td><td class="field-desc">Custom body field <code>custbody_family_code</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RESPONSE SECTION -->
+        <div class="section response-section">
+            <div class="section-title">Responses</div>
+            <div class="response-code">
+                <div class="response-code-header"><span class="response-status">200</span><span class="response-desc">OK</span></div>
+                <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">All customer deposits created successfully</p>
+                <label style="display:block;margin:1rem 0 0.5rem;font-weight:500;color:#374151;">Media type:</label>
+                <select class="media-type-select"><option value="application/json">application/json</option></select>
+                <div style="margin-top:1rem;margin-bottom:0.5rem;font-weight:500;color:#6b7280;font-size:0.8rem;letter-spacing:0.05em;text-transform:uppercase;">Example Value | Schema</div>
+                <div class="code-block" style="border-radius:8px;margin-top:0.25rem;">
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copy
+                    </button>
+                    <pre>{
+  <span class="p">"success"</span>:      <span class="b">true</span>,
+  <span class="p">"message"</span>:      <span class="s">"All customer deposits created successfully"</span>,
+  <span class="p">"totalSent"</span>:    <span class="n">2</span>,
+  <span class="p">"totalSuccess"</span>: <span class="n">2</span>,
+  <span class="p">"totalFailed"</span>:  <span class="n">0</span>,
+  <span class="p">"results"</span>: [
+    {
+      <span class="p">"index"</span>:     <span class="n">1</span>,
+      <span class="p">"success"</span>:   <span class="b">true</span>,
+      <span class="p">"depositId"</span>: <span class="n">91483</span>,
+      <span class="p">"debtor"</span>:    <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:      <span class="s">"Term 2 Deposit"</span>
+    },
+    {
+      <span class="p">"index"</span>:     <span class="n">2</span>,
+      <span class="p">"success"</span>:   <span class="b">true</span>,
+      <span class="p">"depositId"</span>: <span class="n">91484</span>,
+      <span class="p">"debtor"</span>:    <span class="s">"Test SL Debtor"</span>,
+      <span class="p">"memo"</span>:      <span class="s">"Term 3 Deposit"</span>
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+            <div class="response-code error">
+                <div class="response-code-header"><span class="response-status">204</span><span class="response-desc">No Content</span></div>
+                <p style="margin-top:0.5rem;color:#6b7280;font-size:0.875rem;">No records found matching the criteria.</p>
+            </div>
+        </div>
+
+        <div class="notes"><h4>Notes</h4><ul><li>All dates are returned in DD/MM/YYYY format</li><li>Customer deposits do not support an <code>applyList</code> — use the Payment endpoint to apply funds against specific invoices</li></ul></div>
+    </div>
+</div>
+<!-- ENDPOINT 10: GET Debtor Data -->
+<div class="endpoint">
+    <div class="endpoint-header" id="header-10" onclick="toggleEndpoint(10)">
+        <span class="method-badge method-get">GET</span>
+        <span class="endpoint-url">{Base URL}&type=debtor</span>
+        <span class="endpoint-toggle" id="toggle-10">▼</span>
+    </div>
+    <div class="endpoint-body" id="body-10">
+        <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+            <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+            <p style="color: #075985; line-height: 1.7; margin-bottom: 0.5rem;">This endpoint retrieves Debtor records with current balance and deposit balance information.</p>
+        </div>
+        <div class="section">
+            <div class="section-title">Query Parameters</div>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Key</th>
+                        <th style="width: 30%;">Value</th>
+                        <th style="width: 50%;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-name">Script</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code></td>
+                        <td>Script internal ID</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">deploy</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code></td>
+                        <td>Script deployment ID</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">type</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">debtor</code></td>
+                        <td>Type of data</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <div class="section-title">Headers <span style="color: #dc2626; font-size: 0.9rem;">(Must be manually added in Postman)</span></div>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Key</th>
+                        <th style="width: 35%;">Value</th>
+                        <th style="width: 40%;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-name">Content-Type</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                        <td>Request content type</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">Accept</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                        <td>Expected response content type</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">Authorization</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code></td>
+                        <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="background: #fef3c7; border-left: 4px solid #f59e0b; padding: 1rem; margin-top: 1rem; border-radius: 4px;">
+                <p style="font-weight: 600; color: #92400e; margin-bottom: 0.5rem;">⚠️ Important:</p>
+                <p style="color: #78350f; font-size: 0.9rem;">You <strong>must manually add</strong> the Content-Type and Accept headers in the Headers tab.</p>
+            </div>
+        </div>
+        <div class="section response-section">
+            <div class="section-title">Responses</div>
+            <div class="response-code">
+                <div class="response-code-header"><span class="response-status">200</span><span class="response-desc">OK</span></div>
+                <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Debtors retrieved successfully</p>
+                <label style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media type:</label>
+                <select class="media-type-select">
+                    <option value="application/json">application/json</option>
+                </select>
+                <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Example Value | Schema</div>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        Copy
+                    </button>
+                    <pre>{
+  <span class="p">"success"</span>:      <span class="b">true</span>,
+  <span class="p">"message"</span>:      <span class="s">"Debtors retrieved successfully"</span>,
+  <span class="p">"type"</span>:         <span class="s">"Debtors"</span>,
+  <span class="p">"totalRecords"</span>: <span class="n">4508</span>,
+  <span class="p">"data"</span>: [
+    {
+      <span class="p">"Debtor"</span>:         <span class="s">"110 Anniversary Merch"</span>,
+      <span class="p">"balance"</span>:        <span class="n">0</span>,
+      <span class="p">"depositBalance"</span>: <span class="n">0</span>
+    },
+    {
+      <span class="p">"Debtor"</span>:         <span class="s">"AB10969"</span>,
+      <span class="p">"balance"</span>:        <span class="n">0</span>,
+      <span class="p">"depositBalance"</span>: <span class="n">0</span>
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+            <div class="response-code error">
+                <div class="response-code-header"><span class="response-status">204</span><span class="response-desc">No Content</span></div>
+                <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No records found matching the criteria.</p>
+            </div>
+        </div>
+        <div class="notes">
+            <h4>Notes</h4>
+            <ul>
+                <li><code>balance</code> reflects the debtor's current outstanding balance in NetSuite</li>
+                <li><code>depositBalance</code> reflects any unapplied customer deposit funds held on account</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; NetSuite API Reference Guide. All rights reserved.</p>
+        <p>Version 1.0 | Last Updated: February 2026</p>
+    </div>
+</body>
+
+</html>
