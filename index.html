@@ -745,6 +745,7 @@
             <li>Retrieve all Invoices or a single Invoice based on its ID</li>
             <li>Retrieve all Credit Memos</li>
             <li>Retrieve all Payments </li>
+            <li>Retrieve all Customer deposits </li>
             <li>Retrieve Debtor balances and deposit balances</li>
         </ul>
             <p style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem;">All data is retrieved directly from your
@@ -762,7 +763,8 @@
                 <li><strong>GET &nbsp;Base URL&amp;type=invoice:</strong> Retrieve all Invoices along with associated line items</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=invoice&amp;id={invoiceId}:</strong> Retrieve a single Invoice by ID</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=creditmemo:</strong> Retrieve all Credit Memos</li>
-                 <li><strong>GET &nbsp;Base URL&amp;type=payment:</strong> Retrieve all Payments</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=payment:</strong> Retrieve all Payments</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=customerdeposit:</strong> Retrieve all customer deposits</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=debtor:</strong> Retrieve Debtor balances and deposit balances</li>
             </ul>
             </div>
@@ -1838,6 +1840,142 @@ error message: An unexpected SuiteScript error has occurred</pre>
           "amountApplied": number
         }
       ]
+    }
+  ]
+}</pre>
+                </div>
+            </div>
+
+            <!-- 204 -->
+            <div class="response-code error">
+                <div class="response-code-header">
+                    <span class="response-status">204</span>
+                    <span class="response-desc">No Content</span>
+                </div>
+                <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">
+                    No records found matching the criteria.
+                </p>
+            </div>
+        </div>
+
+        <!-- Notes -->
+        <div class="notes">
+            <h4>Notes</h4>
+            <ul>
+                <li>All dates are returned in DD/MM/YYYY format</li>
+                <li>Timestamps are in ISO 8601 format</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- ENDPOINT: GET Customer Deposit Data -->
+<div class="endpoint">
+    <div class="endpoint-header" id="header-8" onclick="toggleEndpoint(8)">
+        <span class="method-badge method-get">GET</span>
+        <span class="endpoint-url">{Base URL}&type=customerdeposit</span>
+        <span class="endpoint-toggle" id="toggle-8">▼</span>
+    </div>
+
+    <div class="endpoint-body" id="body-8">
+        <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+            <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+            <p style="color: #075985; line-height: 1.7;">
+                This endpoint retrieves Customer Deposit records.
+                Each record includes deposit details such as customer, amount, and reference information.
+            </p>
+        </div>
+
+        <!-- Query Parameters -->
+        <div class="section">
+            <div class="section-title">Query Parameters</div>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Key</th>
+                        <th style="width: 30%;">Value</th>
+                        <th style="width: 50%;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-name">Script</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem;">3229</code></td>
+                        <td>Script internal ID</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">deploy</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem;">1</code></td>
+                        <td>Script deployment ID</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">type</span></td>
+                        <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem;">customerdeposit</code></td>
+                        <td>Type of data</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Headers -->
+        <div class="section">
+            <div class="section-title">Headers <span style="color: #dc2626; font-size: 0.9rem;">(Must be manually added in Postman)</span></div>
+            <table class="param-table">
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">Key</th>
+                        <th style="width: 35%;">Value</th>
+                        <th style="width: 40%;">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="param-name">Content-Type</span></td>
+                        <td><code style="background: #f3f4f6;">application/json</code></td>
+                        <td>Request content type</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">Accept</span></td>
+                        <td><code style="background: #f3f4f6;">application/json</code></td>
+                        <td>Expected response content type</td>
+                    </tr>
+                    <tr>
+                        <td><span class="param-name">Authorization</span></td>
+                        <td><code style="background: #f3f4f6; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code></td>
+                        <td>OAuth 1.0 authentication header</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Responses -->
+        <div class="section response-section">
+            <div class="section-title">Responses</div>
+
+            <!-- 200 OK -->
+            <div class="response-code">
+                <div class="response-code-header">
+                    <span class="response-status">200</span>
+                    <span class="response-desc">OK</span>
+                </div>
+                <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">
+                    Customer Deposits retrieved successfully
+                </p>
+
+                <div class="code-block">
+<pre>{
+  "success": true,
+  "message": "Customer Deposits retrieved successfully",
+  "totalRecords": 0,
+  "data": [
+    {
+      "internalId": "String",
+      "depositNumber": "String",
+      "depositDate": "String",
+      "customer": "String",
+      "customerId": "String",
+      "memo": "String",
+      "total": number,
+      "type": "String"
     }
   ]
 }</pre>
