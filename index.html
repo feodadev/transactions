@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -759,14 +760,17 @@
                 style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin: 1rem 0; border-radius: 4px;">
                 <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Available Endpoints:</h4>
                 <ul style="margin-left: 1.5rem; color: #075985; line-height: 1.8;">
-                <li><strong>GET &nbsp;Base URL&amp;type=billingorder:</strong> Retrieve all Sales Orders</li>
-                <li><strong>GET &nbsp;Base URL&amp;type=billingorder&amp;id={salesOrderId}:</strong> Retrieve a single Sales Order by ID</li>
+                <!-- <li><strong>GET &nbsp;Base URL&amp;type=billingorder:</strong> Retrieve all Sales Orders</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=billingorder&amp;id={salesOrderId}:</strong> Retrieve a single Sales Order by ID</li> -->
                 <li><strong>GET &nbsp;Base URL&amp;type=invoice:</strong> Retrieve all Invoices along with associated line items</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=invoice&amp;id={invoiceId}:</strong> Retrieve a single Invoice by ID</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=invoicemeta:</strong> Retrieve all Invoices metadata</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=invoicemeta&amp;id={invoiceId}:</strong> Retrieve a single Invoice's metadata</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=invoicemeta&amp;term={term}:</strong> Retrieve Invoice metadata for a specific term</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=creditmemo:</strong> Retrieve all Credit Memos</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=payment:</strong> Retrieve all Payments</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=customerdeposit:</strong> Retrieve all customer deposits</li>
-                <li><strong>GET &nbsp;Base URL&amp;type=alltransactions:</strong> Retrieve all customer deposits</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=alltransactions:</strong> Retrieve all transaction types in a single response, including invoices, credit memos, payments, customer deposits and customer refund.</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=debtor:</strong> Retrieve Debtor balances and deposit balances</li>
             </ul>
             </div>
@@ -941,7 +945,7 @@ error message: An unexpected SuiteScript error has occurred</pre>
             </div>
 
             <!-- ENDPOINT 1: GET Sales Order Data -->
-            <div class="endpoint">
+            <!-- <div class="endpoint">
                 <div class="endpoint-header" id="header-1" onclick="toggleEndpoint(1)">
                     <span class="method-badge method-get">GET</span>
                     <span class="endpoint-url">{Base URL}&type=billingorder</span>
@@ -1086,10 +1090,10 @@ error message: An unexpected SuiteScript error has occurred</pre>
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- ENDPOINT 2: GET Sales Order by id -->
-            <div class="endpoint">
+            <!-- <div class="endpoint">
                 <div class="endpoint-header" id="header-2" onclick="toggleEndpoint(2)">
                     <span class="method-badge method-get">GET</span>
                     <span class="endpoint-url">{Base URL}&type=billingorder&id={salesOrderId}</span>
@@ -1238,7 +1242,7 @@ error message: An unexpected SuiteScript error has occurred</pre>
                         </ul>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
             <!-- ENDPOINT 3: GET Invoice Data -->
             <div class="endpoint">
@@ -1559,6 +1563,365 @@ error message: An unexpected SuiteScript error has occurred</pre>
                             <li>Timestamps are in ISO 8601 format</li>
                             <li>Line items include quantity, rate, and calculated amounts</li>
                             <li>Classification dimensions (class, department, location) are included for each line</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 5: GET Invoice Metadata -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-5" onclick="toggleEndpoint(5)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=invoicemeta</span>
+                    <span class="endpoint-toggle" id="toggle-5">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-5">
+                    <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves all Invoice metadata records. Use it when you need metadata for every invoice without line item details.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code></td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code></td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">invoicemeta</code></td>
+                                    <td>Invoice metadata data type</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers <span style="color: #dc2626; font-size: 0.9rem;">(Must be manually added in Postman)</span></div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code></td>
+                                    <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Invoice metadata retrieved successfully</p>
+                            <label style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Invoice metadata retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceNumber"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceDate"</span>: <span class="number">"String"</span>,
+      <span class="property">"postingPeriod"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"amount"</span>: <span class="string">Number</span>,
+      <span class="property">"term"</span>: <span class="string">"String"</span>
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No invoice metadata found matching the criteria.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>This endpoint returns invoice metadata only, not full invoice line items.</li>
+                            <li>Use the term query parameter to filter by invoice term when needed.</li>
+                        </ul>
+                    </div>
+                    <div class="notes" style="margin-top: 1rem; background: #eff6ff; border-left: 4px solid #0284c7; padding: 1rem; border-radius: 4px;">
+                        <h4>Sample URL</h4>
+                        <p style="color: #075985; margin: 0; word-break: break-all;">https://11375429.restlets.api.netsuite.com/app/site/hosting/restlet.nl?script=3229&deploy=1&type=invoicemeta&term=2</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 11: GET Invoice Metadata by ID -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-11" onclick="toggleEndpoint(11)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=invoicemeta&amp;id={invoiceId}</span>
+                    <span class="endpoint-toggle" id="toggle-11">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-11">
+                    <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves invoice metadata for a single invoice by its internal ID.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code></td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code></td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">invoicemeta</code></td>
+                                    <td>Type of data</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">id</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">{invoiceId}</code></td>
+                                    <td>Invoice internal ID in NetSuite</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code></td>
+                                    <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Invoice metadata retrieved successfully</p>
+                            <label style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Invoice metadata retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">1</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceNumber"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceDate"</span>: <span class="number">"String"</span>,
+      <span class="property">"postingPeriod"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"amount"</span>: <span class="string">Number</span>,
+      <span class="property">"term"</span>: <span class="string">"String"</span>
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No invoice metadata found for the requested ID.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>Provide a valid NetSuite invoice internal ID.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 12: GET Invoice Metadata by Term -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-12" onclick="toggleEndpoint(12)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=invoicemeta&amp;term={term}</span>
+                    <span class="endpoint-toggle" id="toggle-12">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-12">
+                    <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves invoice metadata for the requested term.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code></td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code></td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">invoicemeta</code></td>
+                                    <td>Invoice metadata data type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">term</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1,2,3,4,5</code></td>
+                                    <td>Term filter: 1=term1, 2=term2, 3=term3, 4=term4, 5=term5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code></td>
+                                    <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Invoice metadata for requested term retrieved successfully</p>
+                            <label style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Invoice metadata retrieved successfully"</span>,
+  <span class="property">"term"</span>: <span class="number">2</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+       <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceNumber"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceDate"</span>: <span class="number">"String"</span>,
+      <span class="property">"postingPeriod"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"amount"</span>: <span class="string">Number</span>,
+      <span class="property">"term"</span>: <span class="string">"String"</span>
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No invoice metadata found for the requested term.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>Term values must be one of: 1, 2, 3, 4, 5.</li>
+                            <li>Term mapping is: 1=&nbsp;term1, 2=&nbsp;term2, 3=&nbsp;term3, 4=&nbsp;term4, 5=&nbsp;term5.</li>
                         </ul>
                     </div>
                 </div>
@@ -2018,8 +2381,7 @@ error message: An unexpected SuiteScript error has occurred</pre>
         <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
             <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
             <p style="color: #075985; line-height: 1.7;">
-                This endpoint retrieves all transaction types in a single response, including invoices,
-                billing orders, credit memos, payments, and customer deposits. It also provides record counts
+                This endpoint retrieves all transaction types in a single response, including invoices, credit memos, payments, customer deposits and customer refund. It also provides record counts
                 for each transaction type.
             </p>
         </div>
@@ -2107,14 +2469,14 @@ error message: An unexpected SuiteScript error has occurred</pre>
   "type": "alltransactions",
   "counts": {
     "invoices": number,
-    "billingOrders": number,
+    "refunds": number,
     "creditMemos": number,
     "payments": number,
     "customerDeposits": number
   },
   "data": {
     "invoices": [ ... ],
-    "billingOrders": [ ... ],
+    "refunds": [ ... ],
     "creditMemos": [ ... ],
     "payments": [ ... ],
     "customerDeposits": [ ... ]
