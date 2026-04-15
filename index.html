@@ -743,7 +743,7 @@
             <ul style="color: #4b5563; line-height: 1.8; margin-bottom: 1rem; margin-left: 1.5rem;">
             <!-- <li>Retrieve all Sales Orders or a single Sales Order based on its ID</li> -->
             <li>Retrieve all Invoices or a single Invoice based on its ID</li>
-            <li>Retrieve all Invoices metadata or a single Invoice metadata based on its ID or Invoice filtering based on term</li>
+            <li>Retrieve all Invoices metadata or a single Invoice metadata based on its ID, Invoice filtering based on term, or by family code</li>
             <li>Retrieve all Credit Memos</li>
             <li>Retrieve all Payments </li>
             <li>Retrieve all Customer deposits </li>
@@ -767,6 +767,7 @@
                 <li><strong>GET &nbsp;Base URL&amp;type=invoicemeta:</strong> Retrieve all Invoices metadata</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=invoicemeta&amp;id={invoiceId}:</strong> Retrieve a single Invoice's metadata</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=invoicemeta&amp;term={term}:</strong> Retrieve Invoice metadata for a specific term</li>
+                <li><strong>GET &nbsp;Base URL&amp;type=invoicemeta&amp;familyCode={familyCode}:</strong> Retrieve all invoices based on the family/family code</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=creditmemo:</strong> Retrieve all Credit Memos</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=payment:</strong> Retrieve all Payments</li>
                 <li><strong>GET &nbsp;Base URL&amp;type=customerdeposit:</strong> Retrieve all customer deposits</li>
@@ -1663,7 +1664,8 @@ error message: An unexpected SuiteScript error has occurred</pre>
       <span class="property">"memo"</span>: <span class="string">"String"</span>,
       <span class="property">"status"</span>: <span class="string">"String"</span>,
       <span class="property">"amount"</span>: <span class="string">Number</span>,
-      <span class="property">"term"</span>: <span class="string">"String"</span>
+      <span class="property">"term"</span>: <span class="string">"String"</span>,
+      <span class="property">"isPaidFromPortal"</span>: <span class="boolean">Boolean</span>
     }
   ]
 }</pre>
@@ -1788,7 +1790,8 @@ error message: An unexpected SuiteScript error has occurred</pre>
       <span class="property">"memo"</span>: <span class="string">"String"</span>,
       <span class="property">"status"</span>: <span class="string">"String"</span>,
       <span class="property">"amount"</span>: <span class="string">Number</span>,
-      <span class="property">"term"</span>: <span class="string">"String"</span>
+      <span class="property">"term"</span>: <span class="string">"String"</span>,
+      <span class="property">"isPaidFromPortal"</span>: <span class="boolean">Boolean</span>
     }
   ]
 }</pre>
@@ -1909,7 +1912,8 @@ error message: An unexpected SuiteScript error has occurred</pre>
       <span class="property">"memo"</span>: <span class="string">"String"</span>,
       <span class="property">"status"</span>: <span class="string">"String"</span>,
       <span class="property">"amount"</span>: <span class="string">Number</span>,
-      <span class="property">"term"</span>: <span class="string">"String"</span>
+      <span class="property">"term"</span>: <span class="string">"String"</span>,
+      <span class="property">"isPaidFromPortal"</span>: <span class="boolean">Boolean</span>
     }
   ]
 }</pre>
@@ -1925,6 +1929,127 @@ error message: An unexpected SuiteScript error has occurred</pre>
                         <ul>
                             <li>Term values must be one of: 1, 2, 3, 4, 5.</li>
                             <li>Term mapping is: 1=&nbsp;term1, 2=&nbsp;term2, 3=&nbsp;term3, 4=&nbsp;term4, 5=&nbsp;term5.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENDPOINT 13: GET Invoice Metadata by Family Code -->
+            <div class="endpoint">
+                <div class="endpoint-header" id="header-13" onclick="toggleEndpoint(13)">
+                    <span class="method-badge method-get">GET</span>
+                    <span class="endpoint-url">{Base URL}&type=invoicemeta&amp;familyCode={familyCode}</span>
+                    <span class="endpoint-toggle" id="toggle-13">▼</span>
+                </div>
+                <div class="endpoint-body" id="body-13">
+                    <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 1rem; margin-bottom: 2rem; border-radius: 4px;">
+                        <h4 style="color: #0c4a6e; margin-bottom: 0.5rem; font-weight: 600;">Endpoint Overview</h4>
+                        <p style="color: #075985; line-height: 1.7;">This endpoint retrieves all invoices based on the family/family code.</p>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Query Parameters</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 20%;">Key</th>
+                                    <th style="width: 30%;">Value</th>
+                                    <th style="width: 50%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Script</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">3229</code></td>
+                                    <td>Script internal ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">deploy</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">1</code></td>
+                                    <td>Script deployment ID</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">invoicemeta</code></td>
+                                    <td>Invoice metadata data type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">familyCode</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">{familyCode}</code></td>
+                                    <td>Family code to filter invoices by</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section">
+                        <div class="section-title">Headers</div>
+                        <table class="param-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 25%;">Key</th>
+                                    <th style="width: 35%;">Value</th>
+                                    <th style="width: 40%;">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="param-name">Content-Type</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Request content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Accept</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px;">application/json</code></td>
+                                    <td>Expected response content type</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="param-name">Authorization</span></td>
+                                    <td><code style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">OAuth oauth_consumer_key="...", oauth_token="..."</code></td>
+                                    <td>OAuth 1.0 authentication header (auto-generated by Postman)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="section response-section">
+                        <div class="section-title">Responses</div>
+                        <div class="response-code">
+                            <div class="response-code-header"><span class="response-status">200</span><span class="response-desc">OK</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">Invoice metadata for requested family code retrieved successfully</p>
+                            <label style="display: block; margin: 1rem 0 0.5rem; font-weight: 500; color: #374151;">Media type:</label>
+                            <select class="media-type-select">
+                                <option value="application/json">application/json</option>
+                            </select>
+                            <div style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 500; color: #374151;">Example Value | Schema</div>
+                            <div class="code-block">
+                                <pre>{
+  <span class="property">"success"</span>: <span class="boolean">true</span>,
+  <span class="property">"message"</span>: <span class="string">"Invoice metadata retrieved successfully"</span>,
+  <span class="property">"totalRecords"</span>: <span class="number">0</span>,
+  <span class="property">"data"</span>: [
+    {
+      <span class="property">"internalId"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceNumber"</span>: <span class="string">"String"</span>,
+      <span class="property">"customerId"</span>: <span class="string">"String"</span>,
+      <span class="property">"invoiceDate"</span>: <span class="number">"String"</span>,
+      <span class="property">"postingPeriod"</span>: <span class="string">"String"</span>,
+      <span class="property">"memo"</span>: <span class="string">"String"</span>,
+      <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"amount"</span>: <span class="string">Number</span>,
+      <span class="property">"term"</span>: <span class="string">"String"</span>,
+      <span class="property">"isPaidFromPortal"</span>: <span class="boolean">Boolean</span>
+    }
+  ]
+}</pre>
+                            </div>
+                        </div>
+                        <div class="response-code error">
+                            <div class="response-code-header"><span class="response-status">204</span><span class="response-desc">No Content</span></div>
+                            <p style="margin-top: 0.5rem; color: #6b7280; font-size: 0.875rem;">No invoice metadata found for the requested family code.</p>
+                        </div>
+                    </div>
+                    <div class="notes">
+                        <h4>Notes</h4>
+                        <ul>
+                            <li>Provide a valid family code to filter invoices.</li>
                         </ul>
                     </div>
                 </div>
