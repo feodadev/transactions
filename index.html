@@ -2172,25 +2172,28 @@ error message: An unexpected SuiteScript error has occurred</pre>
       <span class="property">"internalId"</span>: <span class="string">"String"</span>,
       <span class="property">"creditMemoNumber"</span>: <span class="string">"String"</span>,
       <span class="property">"creditMemoDate"</span>: <span class="string">"String"</span>,
-      <span class="property">"dueDate"</span>: <span class="string">"String"</span>,
       <span class="property">"customer"</span>: <span class="string">"String"</span>,
       <span class="property">"customerId"</span>: <span class="string">"String"</span>,
+      <span class="property">"debtorId"</span>: <span class="string">"String"</span>,
       <span class="property">"memo"</span>: <span class="string">"String"</span>,
       <span class="property">"status"</span>: <span class="string">"String"</span>,
+      <span class="property">"total"</span>: <span class="string">number</span>,
+      <span class="property">"taxTotal"</span>: <span class="string">number</span>,
       <span class="property">"familyCode"</span>: <span class="string">"String"</span>,
-      <span class="property">"rate"</span>: <span class="string">"String"</span>,
-      <span class="property">"items"</span>: [
+      <span class="property">"lines"</span>: [
         {
           <span class="property">"item"</span>: <span class="string">"String"</span>,
           <span class="property">"itemId"</span>: <span class="string">"String"</span>,
           <span class="property">"account"</span>: <span class="string">"String"</span>,
           <span class="property">"accountId"</span>: <span class="string">"String"</span>,
+          <span class="property">"amount"</span>: <span class="string">number</span>,
           <span class="property">"quantity"</span>: <span class="number">number</span>,
-          <span class="property">"rate"</span>: <span class="number">number</span>,
-          <span class="property">"location"</span>: <span class="string">"String"</span>,
-          <span class="property">"department"</span>: <span class="string">"String"</span>,
+          <!-- <span class="property">"rate"</span>: <span class="number">number</span>, -->
+          <span class="property">"taxCode"</span>: <span class="string">"String"</span>,
+          <span class="property">"taxAmount"</span>: <span class="string">number</span>,
           <span class="property">"class"</span>: <span class="string">"String"</span>,
-          <span class="property">"studentExternalId"</span>: <span class="string">"String"</span>,
+          <span class="property">"department"</span>: <span class="string">"String"</span>,
+          <span class="property">"location"</span>: <span class="string">"String"</span>,
         }
       ]
     }
